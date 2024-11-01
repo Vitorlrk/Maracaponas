@@ -1525,9 +1525,77 @@ body {
   .column-header {
     position: relative; /* Torna o container um contêiner de posicionamento para elementos filhos absolutos */
 }
-  _
- / \
- | |
- | |
- | |
-(___)
+
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Estilos do fundo da página */
+body {
+    background-image: url('caminho/para/sua/imagem.jpg'); /* Substitua pelo caminho da sua imagem */
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+/* Contêiner principal da tabela */
+.gerenciador-container {
+    background-color: rgba(255, 255, 255, 0.7);
+    width: 80%;
+    max-width: 600px;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos da tabela */
+.gerenciador-tabela {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Cabeçalho da tabela */
+.gerenciador-tabela th {
+    padding: 15px;
+    text-align: left;
+    font-weight: bold;
+    color: #555;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Células da tabela */
+.gerenciador-tabela td {
+    padding: 15px;
+    text-align: left;
+}
+
+/* Linhas alternadas */
+.gerenciador-tabela tr:nth-child(odd) {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Ações de edição e exclusão */
+.gerenciador-acoes {
+    display: flex;
+    gap: 10px;
+}
+
+.gerenciador-editar, .gerenciador-excluir {
+    cursor: pointer;
+    font-size: 18px;
+    color: #555;
+}
+
+.gerenciador-editar:hover {
+    color: #007bff;
+}
+
+.gerenciador-excluir:hover {
+    color: #dc3545;
+}
