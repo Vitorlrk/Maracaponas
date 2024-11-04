@@ -1,7 +1,7 @@
 /*******************************************************************************
  *              bootstrap-rtl (version 4.0.0 beta2)
  *      Author: Santanu Patra
- *  Created on: september 7, 2016
+ *  Created on: september 7, 2019
  *     Project: bootstrap-rtl
  *   Copyright: GPL
  *******************************************************************************/
@@ -1536,7 +1536,7 @@ body {
 
 /* Estilos do fundo da página */
 body {
-    background-image: url('caminho/para/sua/imagem.jpg'); /* Substitua pelo caminho da sua imagem */
+    background-image: url('../imagens/Background.png'); /* Substitua pelo caminho da sua imagem */
     background-size: cover;
     display: flex;
     align-items: center;
@@ -1599,3 +1599,68 @@ body {
 .gerenciador-excluir:hover {
     color: #dc3545;
 }
+body {
+    font-family: Arial, sans-serif;
+    background: url('../imagens/Background.png') no-repeat center center fixed;
+    background-size: cover;
+    color: #333;
+  }
+  
+  .container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  h1 {
+    text-align: center;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+  }
+  
+  .edit-btn, .delete-btn {
+    cursor: pointer;
+    font-size: 18px;
+    background: none;
+    border: none;
+  }
+  
+  .edit-btn {
+    color: #4CAF50;
+  }
+  
+  .delete-btn {
+    color: #f44336;
+  }
+  
+  #add-employee-btn {
+    margin-top: 20px;
+    padding: 10px 15px;
+    font-size: 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  #add-employee-btn:hover {
+    background-color: #45a049;
+  }
+  

@@ -1,52 +1,57 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciador</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciamento de Funcionários</title>
+  <link rel="stylesheet" href="./estilos/style.css">
 </head>
 <body>
-    <div class="gerenciador-container">
-        <table class="gerenciador-tabela">
-            <thead>
-                <tr>
-                    <th>Código ID</th>
-                    <th>Nome</th>
-                    <th>Cargo</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>6969</td>
-                    <td>Felipênis Alpiste Paudilha</td>
-                    <td>Desenvolvedor</td>
-                    <td class="gerenciador-acoes">
-                        <span class="gerenciador-editar">✏️</span>
-                        <span class="gerenciador-excluir">🗑️</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>0420</td>
-                    <td>Vítor Luiz Rampelotti Kreuch</td>
-                    <td>Desenvolvedor</td>
-                    <td class="gerenciador-acoes">
-                        <span class="gerenciador-editar">✏️</span>
-                        <span class="gerenciador-excluir">🗑️</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>2424</td>
-                    <td>Vitor Sarchi Horongoso</td>
-                    <td>Desenvolvedor</td>
-                    <td class="gerenciador-acoes">
-                        <span class="gerenciador-editar">✏️</span>
-                        <span class="gerenciador-excluir">🗑️</span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+  <div class="container">
+    <h1>Lista de Funcionários</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Código ID</th>
+          <th>Nome</th>
+          <th>Cargo</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="employee-table">
+        <tr>
+          <td>6969</td>
+          <td>Felipênis Alpiste Paudilha</td>
+          <td>Desenvolvedor</td>
+          <td>
+            <button class="edit-btn" onclick="editEmployee(this)">✏️</button>
+            <button class="delete-btn" onclick="deleteEmployee(this)">🗑️</button>
+          </td>
+        </tr>
+        <tr>
+          <td>0420</td>
+          <td>Vítor Luiz Rampelotti Kreuch</td>
+          <td>Desenvolvedor</td>
+          <td>
+            <button class="edit-btn" onclick="editEmployee(this)">✏️</button>
+            <button class="delete-btn" onclick="deleteEmployee(this)">🗑️</button>
+          </td>
+        </tr>
+        <tr>
+          <td>2424</td>
+          <td>Vítor Sarchi Horongoso</td>
+          <td>Desenvolvedor</td>
+          <td>
+            <button class="edit-btn" onclick="editEmployee(this)">✏️</button>
+            <button class="delete-btn" onclick="deleteEmployee(this)">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <button id="add-employee-btn">Adicionar Funcionário</button>
+    <button id="back-button" onclick="goBack()">🔙 Voltar</button>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
+
