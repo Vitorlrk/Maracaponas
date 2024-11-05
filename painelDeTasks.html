@@ -54,8 +54,8 @@
         <h2>SoftLeve</h2>
         <ul>
             <li><a href="Ger_Usuario.html"><span>👥</span> Gerenciar Usuários</a></li>
-            <li><span>⚙️</span> Gerar relatorio</a></li>
-            <li><span>👤</span> Conta</a></li>
+            <li><span>⚙️</span> <a href="#" onclick="generateReport()">Gerar relatório</a></li>
+            <li><span>👤</span> Conta</li>
         </ul>
     </div>
     
@@ -70,65 +70,32 @@
                     <img src="./imagens/plusIcon.png" class="IconeMais" onclick="showCreateTaskForm('em_andamento')">
                     <h3>Em andamento:</h3>
                 </div>
-                <!-- Conteúdo das tarefas, como os cartões de tarefa -->
-                <div class="task-card">
-                    <h4>Fazer SA</h4>
-                    <p>Tem que fazer a SA...</p>
-                    <p><strong>Criação:</strong> 28/10/2024</p>
-                    <p><strong>Prazo:</strong> 31/10/2024</p>
-                    <p><strong>Dev:</strong> Felipe Alpiste Padilha</p>
-                    <div class="task-actions">
-                        <button>Edit</button>
-                        <button onclick="deleteTask(this)">Delete</button>
-                    </div>
-                </div>
+                <div class="task-cards"></div>
             </div>
             
             <div class="task-column" data-column="atrasadas">
                 <div class="column-header">
                     <img src="./imagens/tresPontos.png" class="tresPontos">
-                    <img src="./imagens/plusIcon.png" class="IconeMais" onclick="showCreateTaskForm('em_andamento')">
+                    <img src="./imagens/plusIcon.png" class="IconeMais" onclick="showCreateTaskForm('atrasadas')">
                     <h3>Atrasadas:</h3>
                 </div>
-                <!-- Conteúdo das tarefas, como os cartões de tarefa -->
-                <div class="task-card">
-                    <h4>Fazer SA</h4>
-                    <p>Tem que fazer a SA...</p>
-                    <p><strong>Criação:</strong> 28/10/2024</p>
-                    <p><strong>Prazo:</strong> 31/10/2024</p>
-                    <p><strong>Dev:</strong> Felipe Alpiste Padilha</p>
-                    <div class="task-actions">
-                        <button>Edit</button>
-                        <button onclick="deleteTask(this)">Delete</button>
-                    </div>
-                </div>
+                <div class="task-cards"></div>
             </div>
             
             <div class="task-column" data-column="concluidas">
                 <div class="column-header">
                     <img src="./imagens/tresPontos.png" class="tresPontos">
-                    <img src="./imagens/plusIcon.png" class="IconeMais" onclick="showCreateTaskForm('em_andamento')">
+                    <img src="./imagens/plusIcon.png" class="IconeMais" onclick="showCreateTaskForm('concluidas')">
                     <h3>Concluídas:</h3>
                 </div>
-                <!-- Conteúdo das tarefas, como os cartões de tarefa -->
-                <div class="task-card">
-                    <h4>Fazer SA</h4>
-                    <p>Tem que fazer a SA...</p>
-                    <p><strong>Criação:</strong> 28/10/2024</p>
-                    <p><strong>Prazo:</strong> 31/10/2024</p>
-                    <p><strong>Dev:</strong> Felipe Alpiste Padilha</p>
-                    <div class="task-actions">
-                        <button>Edit</button>
-                        <button onclick="deleteTask(this)">Delete</button>
-                    </div>
-                </div>
+                <div class="task-cards"></div>
             </div>
         </div>
     </div>
 
-    <!-- Formulário de criação de tarefa -->
+    <!-- Formulário de criação e edição de tarefa -->
     <div class="create-task-form" id="createTaskForm">
-        <h3>Criar tarefa</h3>
+        <h3 id="formTitle">Criar tarefa</h3>
         <label for="taskName">Nome:</label>
         <input type="text" id="taskName" name="taskName">
         <label for="creationDate">Data de criação:</label>
@@ -140,21 +107,62 @@
         <label for="dueDate">Prazo:</label>
         <input type="date" id="dueDate" name="dueDate">
         <input type="hidden" id="taskColumn" name="taskColumn">
-        <button onclick="createTask()">Criar</button>
+        <input type="hidden" id="editingTask" name="editingTask" value="">
+        <button onclick="saveTask()">Salvar</button>
         <button onclick="hideCreateTaskForm()">Cancelar</button>
     </div>
 
     <script>
-        function showCreateTaskForm(column) {
+        let currentTask = null; // Armazenar a tarefa atualmente sendo editada
+
+        function showCreateTaskForm(column, taskCard = null) {
             document.getElementById('createTaskForm').style.display = 'block';
             document.getElementById('taskColumn').value = column;
+            currentTask = taskCard; // Atualiza a tarefa atual se houver
+
+            if (taskCard) {
+                document.getElementById('formTitle').innerText = "Editar tarefa";
+                // Preencher os campos do formulário com os dados da tarefa atual
+                document.getElementById('taskName').value = taskCard.querySelector('h4').innerText;
+                document.getElementById('creationDate').value = taskCard.querySelector('p:nth-of-type(3)').innerText.replace('Criação: ', '');
+                document.getElementById('taskDescription').value = taskCard.querySelector('p:nth-of-type(1)').innerText;
+                document.getElementById('devResponsible').value = taskCard.querySelector('p:nth-of-type(4)').innerText.replace('Dev: ', '');
+                document.getElementById('dueDate').value = taskCard.querySelector('p:nth-of-type(2)').innerText.replace('Prazo: ', '');
+            } else {
+                document.getElementById('formTitle').innerText = "Criar tarefa";
+                document.getElementById('taskName').value = '';
+                document.getElementById('creationDate').value = '';
+                document.getElementById('taskDescription').value = '';
+                document.getElementById('devResponsible').value = '';
+                document.getElementById('dueDate').value = '';
+            }
         }
 
         function hideCreateTaskForm() {
             document.getElementById('createTaskForm').style.display = 'none';
+            currentTask = null; // Resetar a tarefa atual
         }
 
-        function createTask() {
+        function createTask(taskData) {
+            const taskCard = document.createElement('div');
+            taskCard.className = 'task-card';
+            taskCard.innerHTML = `
+                <h4>${taskData.name}</h4>
+                <p>${taskData.description}</p>
+                <p><strong>Criação:</strong> ${taskData.creationDate}</p>
+                <p><strong>Prazo:</strong> ${taskData.dueDate}</p>
+                <p><strong>Dev:</strong> ${taskData.dev}</p>
+                <div class="task-actions">
+                    <button onclick="showCreateTaskForm('${taskData.column}', this.parentElement.parentElement)">Edit</button>
+                    <button onclick="deleteTask(this)">Delete</button>
+                </div>
+            `;
+
+            const columnElement = document.querySelector(`.task-column[data-column="${taskData.column}"] .task-cards`);
+            columnElement.appendChild(taskCard);
+        }
+
+        function saveTask() {
             const taskName = document.getElementById('taskName').value;
             const creationDate = document.getElementById('creationDate').value;
             const taskDescription = document.getElementById('taskDescription').value;
@@ -162,31 +170,33 @@
             const dueDate = document.getElementById('dueDate').value;
             const taskColumn = document.getElementById('taskColumn').value;
 
-            const taskCard = document.createElement('div');
-            taskCard.className = 'task-card';
-            taskCard.innerHTML = `
-                <h4>${taskName}</h4>
-                <p>${taskDescription}</p>
-                <p><strong>Criação:</strong> ${creationDate}</p>
-                <p><strong>Prazo:</strong> ${dueDate}</p>
-                <p><strong>Dev:</strong> ${devResponsible}</p>
-                <div class="task-actions">
-                    <button>Edit</button>
-                    <button onclick="deleteTask(this)">Delete</button>
-                </div>
-            `;
+            const taskData = {
+                name: taskName,
+                description: taskDescription,
+                creationDate: creationDate,
+                dueDate: dueDate,
+                dev: devResponsible,
+                column: taskColumn,
+            };
 
-            const columnElement = document.querySelector(`.task-column[data-column="${taskColumn}"]`);
-            columnElement.appendChild(taskCard);
+            if (currentTask) {
+                // Atualizar a tarefa se estiver em edição
+                const taskCard = currentTask; // A tarefa atual
+                taskCard.querySelector('h4').innerText = taskData.name;
+                taskCard.querySelector('p:nth-of-type(1)').innerText = taskData.description;
+                taskCard.querySelector('p:nth-of-type(3)').innerText = `Criação: ${taskData.creationDate}`;
+                taskCard.querySelector('p:nth-of-type(2)').innerText = `Prazo: ${taskData.dueDate}`;
+                taskCard.querySelector('p:nth-of-type(4)').innerText = `Dev: ${taskData.dev}`;
+            } else {
+                createTask(taskData); // Se não estiver editando, criar uma nova tarefa
+            }
 
-            hideCreateTaskForm();
+            hideCreateTaskForm(); // Fechar o formulário após salvar
         }
 
         function deleteTask(element) {
-            if (confirm('Tem certeza que deseja excluir esta tarefa?')) {
-                const taskCard = element.closest('.task-card');
-                taskCard.remove();
-            }
+            const taskCard = element.closest('.task-card');
+            taskCard.remove(); // Remove a tarefa
         }
     </script>
 </body>
