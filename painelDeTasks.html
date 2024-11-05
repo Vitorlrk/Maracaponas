@@ -5,14 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel de Tarefas</title>
     <link rel="stylesheet" href="./estilos/style.css">
+    <style>
+        .create-task-form {
+            display: none; /* Inicialmente escondido */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+        }
+        .create-task-form input, .create-task-form textarea {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .task-card {
+            background-color: white; /* Mantém o fundo branco */
+            color: black;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .task-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        .task-actions button {
+            margin: 5px;
+            background-color: black; /* Cor do botão preta */
+            color: white; /* Cor do texto branca */
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .task-actions button:hover {
+            background-color: #444; /* Cor do botão ao passar o mouse */
+        }
+    </style>
 </head>
 <body>
     <div class="sidebar">
         <h2>SoftLeve</h2>
         <ul>
-            <li><span>👥</span> Gerenciar Usuários</li>
-            <li><span>⚙️</span> consultar</li>
-            <li><span>👤</span> conta</li>
+            <li><a href="Ger_Usuario.html"><span>👥</span> Gerenciar Usuários</a></li>
+            <li><span>⚙️</span> Gerar relatorio</a></li>
+            <li><span>👤</span> Conta</a></li>
         </ul>
     </div>
     
@@ -21,10 +64,10 @@
             <input type="text" placeholder="Filtre suas Tarefas" />
         </div>
         <div class="tasks-container">
-            <div class="task-column">
+            <div class="task-column" data-column="em_andamento">
                 <div class="column-header">
                     <img src="./imagens/tresPontos.png" class="tresPontos">
-                    <img src="./imagens/plusIcon.png" class="IconeMais">
+                    <img src="./imagens/plusIcon.png" class="IconeMais" onclick="showCreateTaskForm('em_andamento')">
                     <h3>Em andamento:</h3>
                 </div>
                 <!-- Conteúdo das tarefas, como os cartões de tarefa -->
@@ -36,16 +79,16 @@
                     <p><strong>Dev:</strong> Felipe Alpiste Padilha</p>
                     <div class="task-actions">
                         <button>Edit</button>
-                        <button>Delete</button>
+                        <button onclick="deleteTask(this)">Delete</button>
                     </div>
                 </div>
             </div>
             
-            <div class="task-column">
+            <div class="task-column" data-column="atrasadas">
                 <div class="column-header">
-                    <span class="dots">•••</span>
-                    <span class="add">+</span>
-                    <h3>Atrazadas:</h3>
+                    <img src="./imagens/tresPontos.png" class="tresPontos">
+                    <img src="./imagens/plusIcon.png" class="IconeMais" onclick="showCreateTaskForm('em_andamento')">
+                    <h3>Atrasadas:</h3>
                 </div>
                 <!-- Conteúdo das tarefas, como os cartões de tarefa -->
                 <div class="task-card">
@@ -56,16 +99,16 @@
                     <p><strong>Dev:</strong> Felipe Alpiste Padilha</p>
                     <div class="task-actions">
                         <button>Edit</button>
-                        <button>Delete</button>
+                        <button onclick="deleteTask(this)">Delete</button>
                     </div>
                 </div>
             </div>
             
-            <div class="task-column">
+            <div class="task-column" data-column="concluidas">
                 <div class="column-header">
-                    <span class="dots">•••</span>
-                    <span class="add">+</span>
-                    <h3>Concluidas:</h3>
+                    <img src="./imagens/tresPontos.png" class="tresPontos">
+                    <img src="./imagens/plusIcon.png" class="IconeMais" onclick="showCreateTaskForm('em_andamento')">
+                    <h3>Concluídas:</h3>
                 </div>
                 <!-- Conteúdo das tarefas, como os cartões de tarefa -->
                 <div class="task-card">
@@ -76,11 +119,75 @@
                     <p><strong>Dev:</strong> Felipe Alpiste Padilha</p>
                     <div class="task-actions">
                         <button>Edit</button>
-                        <button>Delete</button>
+                        <button onclick="deleteTask(this)">Delete</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Formulário de criação de tarefa -->
+    <div class="create-task-form" id="createTaskForm">
+        <h3>Criar tarefa</h3>
+        <label for="taskName">Nome:</label>
+        <input type="text" id="taskName" name="taskName">
+        <label for="creationDate">Data de criação:</label>
+        <input type="date" id="creationDate" name="creationDate">
+        <label for="taskDescription">Descrição:</label>
+        <textarea id="taskDescription" name="taskDescription"></textarea>
+        <label for="devResponsible">Dev. Responsável:</label>
+        <input type="text" id="devResponsible" name="devResponsible">
+        <label for="dueDate">Prazo:</label>
+        <input type="date" id="dueDate" name="dueDate">
+        <input type="hidden" id="taskColumn" name="taskColumn">
+        <button onclick="createTask()">Criar</button>
+        <button onclick="hideCreateTaskForm()">Cancelar</button>
+    </div>
+
+    <script>
+        function showCreateTaskForm(column) {
+            document.getElementById('createTaskForm').style.display = 'block';
+            document.getElementById('taskColumn').value = column;
+        }
+
+        function hideCreateTaskForm() {
+            document.getElementById('createTaskForm').style.display = 'none';
+        }
+
+        function createTask() {
+            const taskName = document.getElementById('taskName').value;
+            const creationDate = document.getElementById('creationDate').value;
+            const taskDescription = document.getElementById('taskDescription').value;
+            const devResponsible = document.getElementById('devResponsible').value;
+            const dueDate = document.getElementById('dueDate').value;
+            const taskColumn = document.getElementById('taskColumn').value;
+
+            const taskCard = document.createElement('div');
+            taskCard.className = 'task-card';
+            taskCard.innerHTML = `
+                <h4>${taskName}</h4>
+                <p>${taskDescription}</p>
+                <p><strong>Criação:</strong> ${creationDate}</p>
+                <p><strong>Prazo:</strong> ${dueDate}</p>
+                <p><strong>Dev:</strong> ${devResponsible}</p>
+                <div class="task-actions">
+                    <button>Edit</button>
+                    <button onclick="deleteTask(this)">Delete</button>
+                </div>
+            `;
+
+            const columnElement = document.querySelector(`.task-column[data-column="${taskColumn}"]`);
+            columnElement.appendChild(taskCard);
+
+            hideCreateTaskForm();
+        }
+
+        function deleteTask(element) {
+            if (confirm('Tem certeza que deseja excluir esta tarefa?')) {
+                const taskCard = element.closest('.task-card');
+                taskCard.remove();
+            }
+        }
+    </script>
 </body>
 </html>

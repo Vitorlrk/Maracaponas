@@ -5,6 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gerenciamento de Funcionários</title>
   <link rel="stylesheet" href="./estilos/style.css">
+  <style>
+    /* Estilo para o formulário de adicionar funcionário */
+    .add-employee-form {
+      display: none; /* Esconde o formulário inicialmente */
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      z-index: 1000;
+    }
+    .add-employee-form input {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -21,7 +41,7 @@
       <tbody id="employee-table">
         <tr>
           <td>6969</td>
-          <td>Felipênis Alpiste Paudilha</td>
+          <td>OOOOOOOOOO</td>
           <td>Desenvolvedor</td>
           <td>
             <button class="edit-btn" onclick="editEmployee(this)">✏️</button>
@@ -48,10 +68,69 @@
         </tr>
       </tbody>
     </table>
-    <button id="add-employee-btn">Adicionar Funcionário</button>
-    <button id="back-button" onclick="goBack()">🔙 Voltar</button>
+    <button id="add-employee-btn" onclick="showAddEmployeeForm()">Adicionar Funcionário</button>
+    <button id="back-button" onclick="goToPage()">Voltar</button>
   </div>
-  <script src="script.js"></script>
+
+  <!-- Formulário para adicionar funcionário -->
+  <div class="add-employee-form" id="addEmployeeForm">
+    <h3>Adicionar Funcionário</h3>
+    <label for="employeeId">Código ID:</label>
+    <input type="text" id="employeeId">
+    <label for="employeeName">Nome:</label>
+    <input type="text" id="employeeName">
+    <label for="employeePosition">Cargo:</label>
+    <input type="text" id="employeePosition">
+    <button onclick="addEmployee()">Adicionar</button>
+    <button onclick="hideAddEmployeeForm()">Cancelar</button>
+  </div>
+
+  <script>
+    function showAddEmployeeForm() {
+      document.getElementById('addEmployeeForm').style.display = 'block';
+    }
+
+    function hideAddEmployeeForm() {
+      document.getElementById('addEmployeeForm').style.display = 'none';
+    }
+
+    function addEmployee() {
+      const employeeTable = document.getElementById('employee-table');
+      const employeeId = document.getElementById('employeeId').value;
+      const employeeName = document.getElementById('employeeName').value;
+      const employeePosition = document.getElementById('employeePosition').value;
+
+      if (employeeId && employeeName && employeePosition) {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+          <td>${employeeId}</td>
+          <td>${employeeName}</td>
+          <td>${employeePosition}</td>
+          <td>
+            <button class="edit-btn" onclick="editEmployee(this)">✏️</button>
+            <button class="delete-btn" onclick="deleteEmployee(this)">🗑️</button>
+          </td>
+        `;
+        employeeTable.appendChild(newRow);
+
+        hideAddEmployeeForm();
+      } else {
+        alert('Por favor, preencha todos os campos.');
+      }
+    }
+
+    function deleteEmployee(button) {
+      const row = button.parentNode.parentNode;
+      row.parentNode.removeChild(row);
+    }
+
+    function editEmployee(button) {
+      // Lógica de edição de funcionário (a ser implementada)
+    }
+
+    function goToPage() {
+      window.location.href = "painelDeTasks.html"; 
+    }
+  </script>
 </body>
 </html>
-

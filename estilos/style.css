@@ -1663,4 +1663,14 @@ body {
   #add-employee-btn:hover {
     background-color: #45a049;
   }
-  
+  .back-button {
+    margin-top: 20px;
+    padding: 10px 15px;
+    font-size: 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    align-self: right;
+  }
