@@ -5,14 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel de Tarefas</title>
     <link rel="stylesheet" href="./estilos/style.css">
+    <style>
+        .create-task-form {
+            display: none; /* Inicialmente escondido */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+        }
+        .create-task-form input, .create-task-form textarea {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .task-card {
+            background-color: white; /* Mantém o fundo branco */
+            color: black;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .task-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        .task-actions button {
+            margin: 5px;
+            background-color: black; /* Cor do botão preta */
+            color: white; /* Cor do texto branca */
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .task-actions button:hover {
+            background-color: #444; /* Cor do botão ao passar o mouse */
+        }
+    </style>
 </head>
 <body>
-    <div class="sidebar">
+    <div class="sidebar"><ul>
         <h2>SoftLeve</h2>
-        <ul>
-            <li><span>👥</span> Gerenciar Usuários</li>
-            <li><span>⚙️</span> consultar</li>
-            <li><span>👤</span> conta</li>
+
+            <li><a href="Ger_Usuario.html"><span>👥</span> Gerenciar Usuários</a></li>
+            <li><span>⚙️</span> <a href="generateReport.html" onclick="generateReport()">Gerar relatório</a></li>
+            <li><span>👤</span> Conta</li> 
+        
         </ul>
     </div>
     
@@ -21,66 +65,140 @@
             <input type="text" placeholder="Filtre suas Tarefas" />
         </div>
         <div class="tasks-container">
-            <div class="task-column">
+            <div class="task-column" data-column="em_andamento">
                 <div class="column-header">
                     <img src="./imagens/tresPontos.png" class="tresPontos">
-                    <img src="./imagens/plusIcon.png" class="IconeMais">
+                    <img src="./imagens/plusIcon.png" class="IconeMais" onclick="showCreateTaskForm('em_andamento')">
                     <h3>Em andamento:</h3>
                 </div>
-                <!-- Conteúdo das tarefas, como os cartões de tarefa -->
-                <div class="task-card">
-                    <h4>Fazer SA</h4>
-                    <p>Tem que fazer a SA...</p>
-                    <p><strong>Criação:</strong> 28/10/2024</p>
-                    <p><strong>Prazo:</strong> 31/10/2024</p>
-                    <p><strong>Dev:</strong> Felipe Alpiste Padilha</p>
-                    <div class="task-actions">
-                        <button>Edit</button>
-                        <button>Delete</button>
-                    </div>
-                </div>
+                <div class="task-cards"></div>
             </div>
             
-            <div class="task-column">
+            <div class="task-column" data-column="atrasadas">
                 <div class="column-header">
-                    <span class="dots">•••</span>
-                    <span class="add">+</span>
-                    <h3>Atrazadas:</h3>
+                    <img src="./imagens/tresPontos.png" class="tresPontos">
+                    <img src="./imagens/plusIcon.png" class="IconeMais" onclick="showCreateTaskForm('atrasadas')">
+                    <h3>Atrasadas:</h3>
                 </div>
-                <!-- Conteúdo das tarefas, como os cartões de tarefa -->
-                <div class="task-card">
-                    <h4>Fazer SA</h4>
-                    <p>Tem que fazer a SA...</p>
-                    <p><strong>Criação:</strong> 28/10/2024</p>
-                    <p><strong>Prazo:</strong> 31/10/2024</p>
-                    <p><strong>Dev:</strong> Felipe Alpiste Padilha</p>
-                    <div class="task-actions">
-                        <button>Edit</button>
-                        <button>Delete</button>
-                    </div>
-                </div>
+                <div class="task-cards"></div>
             </div>
             
-            <div class="task-column">
+            <div class="task-column" data-column="concluidas">
                 <div class="column-header">
-                    <span class="dots">•••</span>
-                    <span class="add">+</span>
-                    <h3>Concluidas:</h3>
+                    <img src="./imagens/tresPontos.png" class="tresPontos">
+                    <img src="./imagens/plusIcon.png" class="IconeMais" onclick="showCreateTaskForm('concluidas')">
+                    <h3>Concluídas:</h3>
                 </div>
-                <!-- Conteúdo das tarefas, como os cartões de tarefa -->
-                <div class="task-card">
-                    <h4>Fazer SA</h4>
-                    <p>Tem que fazer a SA...</p>
-                    <p><strong>Criação:</strong> 28/10/2024</p>
-                    <p><strong>Prazo:</strong> 31/10/2024</p>
-                    <p><strong>Dev:</strong> Felipe Alpiste Padilha</p>
-                    <div class="task-actions">
-                        <button>Edit</button>
-                        <button>Delete</button>
-                    </div>
-                </div>
+                <div class="task-cards"></div>
             </div>
         </div>
     </div>
+
+    <!-- Formulário de criação e edição de tarefa -->
+    <div class="create-task-form" id="createTaskForm">
+        <h3 id="formTitle">Criar tarefa</h3>
+        <label for="taskName">Nome:</label>
+        <input type="text" id="taskName" name="taskName">
+        <label for="creationDate">Data de criação:</label>
+        <input type="date" id="creationDate" name="creationDate">
+        <label for="taskDescription">Descrição:</label>
+        <textarea id="taskDescription" name="taskDescription"></textarea>
+        <label for="devResponsible">Dev. Responsável:</label>
+        <input type="text" id="devResponsible" name="devResponsible">
+        <label for="dueDate">Prazo:</label>
+        <input type="date" id="dueDate" name="dueDate">
+        <input type="hidden" id="taskColumn" name="taskColumn">
+        <input type="hidden" id="editingTask" name="editingTask" value="">
+        <button onclick="saveTask()">Salvar</button>
+        <button onclick="hideCreateTaskForm()">Cancelar</button>
+    </div>
+
+    <script>
+        let currentTask = null; // Armazenar a tarefa atualmente sendo editada
+
+        function showCreateTaskForm(column, taskCard = null) {
+            document.getElementById('createTaskForm').style.display = 'block';
+            document.getElementById('taskColumn').value = column;
+            currentTask = taskCard; // Atualiza a tarefa atual se houver
+
+            if (taskCard) {
+                document.getElementById('formTitle').innerText = "Editar tarefa";
+                // Preencher os campos do formulário com os dados da tarefa atual
+                document.getElementById('taskName').value = taskCard.querySelector('h4').innerText;
+                document.getElementById('creationDate').value = taskCard.querySelector('p:nth-of-type(3)').innerText.replace('Criação: ', '');
+                document.getElementById('taskDescription').value = taskCard.querySelector('p:nth-of-type(1)').innerText;
+                document.getElementById('devResponsible').value = taskCard.querySelector('p:nth-of-type(4)').innerText.replace('Dev: ', '');
+                document.getElementById('dueDate').value = taskCard.querySelector('p:nth-of-type(2)').innerText.replace('Prazo: ', '');
+            } else {
+                document.getElementById('formTitle').innerText = "Criar tarefa";
+                document.getElementById('taskName').value = '';
+                document.getElementById('creationDate').value = '';
+                document.getElementById('taskDescription').value = '';
+                document.getElementById('devResponsible').value = '';
+                document.getElementById('dueDate').value = '';
+            }
+        }
+
+        function hideCreateTaskForm() {
+            document.getElementById('createTaskForm').style.display = 'none';
+            currentTask = null; // Resetar a tarefa atual
+        }
+
+        function createTask(taskData) {
+            const taskCard = document.createElement('div');
+            taskCard.className = 'task-card';
+            taskCard.innerHTML = `
+                <h4>${taskData.name}</h4>
+                <p>${taskData.description}</p>
+                <p><strong>Criação:</strong> ${taskData.creationDate}</p>
+                <p><strong>Prazo:</strong> ${taskData.dueDate}</p>
+                <p><strong>Dev:</strong> ${taskData.dev}</p>
+                <div class="task-actions">
+                    <button onclick="showCreateTaskForm('${taskData.column}', this.parentElement.parentElement)">Edit</button>
+                    <button onclick="deleteTask(this)">Delete</button>
+                </div>
+            `;
+
+            const columnElement = document.querySelector(`.task-column[data-column="${taskData.column}"] .task-cards`);
+            columnElement.appendChild(taskCard);
+        }
+
+        function saveTask() {
+            const taskName = document.getElementById('taskName').value;
+            const creationDate = document.getElementById('creationDate').value;
+            const taskDescription = document.getElementById('taskDescription').value;
+            const devResponsible = document.getElementById('devResponsible').value;
+            const dueDate = document.getElementById('dueDate').value;
+            const taskColumn = document.getElementById('taskColumn').value;
+
+            const taskData = {
+                name: taskName,
+                description: taskDescription,
+                creationDate: creationDate,
+                dueDate: dueDate,
+                dev: devResponsible,
+                column: taskColumn,
+            };
+
+            if (currentTask) {
+                // Atualizar a tarefa se estiver em edição
+                const taskCard = currentTask; // A tarefa atual
+                taskCard.querySelector('h4').innerText = taskData.name;
+                taskCard.querySelector('p:nth-of-type(1)').innerText = taskData.description;
+                taskCard.querySelector('p:nth-of-type(3)').innerText = `Criação: ${taskData.creationDate}`;
+                taskCard.querySelector('p:nth-of-type(2)').innerText = `Prazo: ${taskData.dueDate}`;
+                taskCard.querySelector('p:nth-of-type(4)').innerText = `Dev: ${taskData.dev}`;
+            } else {
+                createTask(taskData); // Se não estiver editando, criar uma nova tarefa
+            }
+
+            hideCreateTaskForm(); // Fechar o formulário após salvar
+        }
+
+        function deleteTask(element) {
+            const taskCard = element.closest('.task-card');
+            taskCard.remove(); // Remove a tarefa
+        }
+    </script>
 </body>
 </html>
