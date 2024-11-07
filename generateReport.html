@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Tarefas</title>
+    <link rel="stylesheet" href="./estilos/style.css">
+    <style>
+        /* Seus estilos existentes */
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>SoftLeve</h2>
+        <ul>
+            <li><a href="Ger_Usuario.html"><span>👥</span> Gerenciar Usuários</a></li>
+            <li><span>⚙️</span> <a href="#" onclick="generateReport()">Gerar relatório</a></li>
+            <li><span>👤</span> Conta</li>
+        </ul>
+    </div>
+    
+    <div class="main-content">
+        <!-- Conteúdo existente da página -->
+    </div>
+
+    <script>
+        function generateReport() {
+            const columns = document.querySelectorAll('.task-column');
+            let reportContent = "Relatório de Tarefas\n\n";
+
+            columns.forEach(column => {
+                const columnTitle = column.querySelector('.column-header h3').innerText;
+                const taskCards = column.querySelectorAll('.task-card');
+                
+                reportContent += `=== ${columnTitle} ===\n\n`;
+                
+                taskCards.forEach(taskCard => {
+                    const taskName = taskCard.querySelector('h4').innerText;
+                    const taskDescription = taskCard.querySelector('p:nth-of-type(1)').innerText;
+                    const creationDate = taskCard.querySelector('p:nth-of-type(3)').innerText.replace('Criação: ', '');
+                    const dueDate = taskCard.querySelector('p:nth-of-type(2)').innerText.replace('Prazo: ', '');
+                    const devResponsible = taskCard.querySelector('p:nth-of-type(4)').innerText.replace('Dev: ', '');
+
+                    reportContent += `Tarefa: ${taskName}\n`;
+                    reportContent += `Descrição: ${taskDescription}\n`;
+                    reportContent += `Data de Criação: ${creationDate}\n`;
+                    reportContent += `Prazo: ${dueDate}\n`;
+                    reportContent += `Desenvolvedor Responsável: ${devResponsible}\n\n`;
+                });
+
+                reportContent += "\n\n";
+            });
+
+            // Abrir o relatório em uma nova janela ou baixar como arquivo
+            downloadReport(reportContent, "Relatorio_Tarefas.txt");
+        }
+
+        function downloadReport(content, filename) {
+            const blob = new Blob([content], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+        }
+    </script>
+</body>
+</html>
